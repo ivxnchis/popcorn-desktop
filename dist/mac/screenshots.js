@@ -2,9 +2,8 @@
 // screenshots of the main screens. Start the app with
 // --remote-debugging-port=<port> first.
 //
-// A fresh install has no API server URLs yet: it fetches them over the DHT
-// and needs a restart. So run this twice:
-//   node dist/mac/screenshots.js <outDir> <port> prepare   (accept terms, fetch URLs, quit)
+// The app only reads its API servers at startup, so run this twice:
+//   node dist/mac/screenshots.js <outDir> <port> prepare   (accept terms, point at the sample API, quit)
 //   node dist/mac/screenshots.js <outDir> <port> capture   (take the screenshots)
 'use strict';
 
@@ -16,6 +15,7 @@ const WebSocket = require('ws');
 const outDir = process.argv[2] || 'screenshots';
 const port = Number(process.argv[3] || 9222);
 const phase = process.argv[4] || 'capture';
+const sampleApi = process.env.SAMPLE_API || 'http://127.0.0.1:8099/';
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function getJSON(url) {
@@ -166,15 +166,10 @@ async function main() {
         await click('#disclaimer-container .btn-accept');
       }
     });
-    await step('api urls', async () => {
-      try {
-        await waitFor(`!!AdvSettings.get('dhtData')`, 90000);
-        console.log('Got the API server URLs');
-      } catch (e) {
-        // the DHT is often unreachable from CI; YTS still gives the movie tab real data
-        await cdp.evaluate(`AdvSettings.set('customMoviesServer', 'https://yts.mx/'), true`);
-        console.log('No API server URLs over the DHT, using YTS for movies');
-      }
+    // use the local sample API (dist/mac/sample-api.js) so screenshots never
+    // depend on the real servers; turning off DHT updates keeps it from being replaced
+    await step('sample api', async () => {
+      await cdp.evaluate(`['customMoviesServer', 'customSeriesServer', 'customAnimeServer'].forEach((k) => AdvSettings.set(k, ${JSON.stringify(sampleApi)})), AdvSettings.set('dhtEnable', false), true`);
     });
     saveProblems();
     await cdp.evaluate(`setTimeout(() => nw.App.quit(), 3000), true`).catch(() => {});

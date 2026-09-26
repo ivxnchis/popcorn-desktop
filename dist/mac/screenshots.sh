@@ -26,9 +26,12 @@ stop() {
   sleep 1
 }
 
+node dist/mac/sample-api.js 8099 > "$OUT/sample-api.log" 2>&1 &
+API_PID=$!
+
 status=0
 
-# first launch: accept the terms and fetch the API server URLs, then quit
+# first launch: accept the terms and switch to the sample API, then quit
 launch
 node dist/mac/screenshots.js "$OUT" 9222 prepare || status=1
 for _ in $(seq 1 15); do
@@ -47,4 +50,5 @@ if ! kill -0 "$PID" 2>/dev/null; then
   status=1
 fi
 stop
+kill "$API_PID" 2>/dev/null
 exit $status
