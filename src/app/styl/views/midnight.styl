@@ -616,3 +616,94 @@ glass()
             .sdo-infos .sdoi-title
                 font-size 20px
                 font-weight 700
+
+// ---------- Settings: grouped cards and macOS-style switches
+
+.settings-container-contain
+    padding-top $FilterBarHeight + 12px
+
+    &::-webkit-scrollbar-track
+        margin-top $FilterBarHeight
+
+    .close-icon
+        top 70px
+        -webkit-app-region no-drag
+
+    .settings-container
+        background-color transparent
+        padding-bottom 32px
+
+        section
+            width auto
+            max-width 1000px
+            margin 0 auto 14px
+            padding 0 24px 16px
+            box-sizing border-box
+            background-color $Surface
+            border 1px solid $Hairline
+            border-radius 16px
+
+            .title
+                border-right none
+                padding-top 20px
+                color #fff
+                font-size 15px
+                font-weight 700
+
+            .content
+                border-bottom none
+                padding-top 20px
+
+        #title
+            background-color transparent
+            border none
+
+            .title
+                font-size 30px
+                font-weight 800
+                letter-spacing -0.02em
+
+        select,
+        input[type='text'],
+        input[type='number'],
+        input[type='password']
+            border-radius 8px
+
+    // checkboxes become switches
+    .settings-label
+        position relative
+        padding-left 44px
+
+        &:before
+            content ''
+            position absolute
+            left 0
+            top 50%
+            margin-top -10px
+            width 34px
+            height 20px
+            padding 0
+            border-radius 10px
+            background-color rgba(255, 255, 255, 0.16)
+            transition background-color 0.2s
+
+        &:after
+            content ''
+            position absolute
+            left 2px
+            top 50%
+            margin -8px 0 0
+            width 16px
+            height 16px
+            border-radius 50%
+            background #fff
+            box-shadow 0 1px 3px rgba(0, 0, 0, 0.35)
+            opacity 1
+            transition transform 0.2s
+
+    input[type=checkbox].settings-checkbox:checked + label.settings-label
+        &:before
+            background-color $Accent
+
+        &:after
+            transform translateX(14px)
