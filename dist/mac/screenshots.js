@@ -223,6 +223,21 @@ async function main() {
     await sleep(500);
   });
 
+  // the same screens in the original theme, for before/after comparisons
+  await step('classic theme', async () => {
+    await cdp.evaluate(`$('link#theme').attr('href', 'themes/Official_-_Dark_theme.css'), true`);
+    await click('.source.movieTabShow');
+    await sleep(1500);
+    await waitFor(itemsLoaded, 60000);
+    await sleep(5000);
+    await shot('classic-01-movies');
+    await click('.items .item .cover');
+    await waitFor(`!!document.querySelector('#movie-detail .close-icon')`);
+    await sleep(5000);
+    await shot('classic-03-movie-detail');
+    await click('#movie-detail .close-icon');
+  });
+
   saveProblems();
   cdp.ws.close();
 }
