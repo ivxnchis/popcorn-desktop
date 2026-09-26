@@ -707,3 +707,18 @@ glass()
 
         &:after
             transform translateX(14px)
+
+// ---------- Stream loading screen
+
+.loading
+    .minimize-icon
+        top 70px
+        right 24px
+
+    .maximize-icon
+        glass()
+        border 1px solid $GlassBorder
+        border-radius 12px
+
+    .loading-progressbar
+        background-color rgba(255, 255, 255, 0.14)
