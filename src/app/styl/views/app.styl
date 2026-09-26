@@ -11,9 +11,10 @@ $MainFont = $Font
 $MainFontBold = $Font
 $ButtonFont = $Font
 
-$TitleHeight = 32px
-$FilterBarHeight = 35px
-$HeaderHeight = 65px
+// themes may set these before importing this file
+$TitleHeight ?= 32px
+$FilterBarHeight ?= 35px
+$HeaderHeight ?= 65px
 $MovieListPadding = calc(100% - 67px)
 
 @import 'fonts'
