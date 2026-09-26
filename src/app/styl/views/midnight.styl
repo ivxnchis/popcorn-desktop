@@ -299,6 +299,13 @@ glass()
         transform translateY(-4px) scale(1.03)
         box-shadow 0 0 0 2px $PosterHoverBorder, 0 16px 36px rgba(0, 0, 0, 0.6)
 
+    // positioned so a hovered cover's shadow doesn't paint over the text
+    .title,
+    .title2,
+    .year,
+    .seasons
+        position relative
+
     .title
         margin-top 10px
         color $Text1
@@ -415,6 +422,11 @@ glass()
                     border 1px solid rgba(255, 255, 255, 0.45)
                     border-radius 4px
                     font-size 12px
+
+                // health, magnet and source icons follow the rating
+                .status-indicators
+                    margin-left 16px
+                    margin-right 0
 
             .overview
                 top 0
@@ -586,6 +598,8 @@ glass()
             height auto
             margin-top 14px
             padding-right 0
+            justify-content flex-start
+            gap 28px
 
     .show-details
         height 56vh

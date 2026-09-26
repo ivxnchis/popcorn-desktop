@@ -188,7 +188,7 @@
       Common.loadImage(p).then((img) => {
         this.ui.poster.attr('src', img || noimg).addClass('fadein');
       });
-      Common.loadImage(b).then((img) => {
+      Common.loadImage(Common.largeBackdrop(b)).then((img) => {
         this.ui.backdrop
             .css('background-image', 'url(' + (img || nobg) + ')')
             .addClass('fadein');

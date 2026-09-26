@@ -216,7 +216,8 @@
                 poster = this.model.get('poster') || noimg;
             }
             if (!backdrop) {
-              backdrop = images.banner || nobg;
+              // a banner is a thin strip, so it only works as a last resort
+              backdrop = images.fanart || images.banner || nobg;
             }
 
             if (Settings.translatePosters) {
@@ -232,7 +233,7 @@
                     .css('background-image', 'url(' + (img || noimg) + ')')
                     .addClass('fadein');
             });
-            Common.loadImage(backdrop).then((img) => {
+            Common.loadImage(Common.largeBackdrop(backdrop)).then((img) => {
                 $('.shb-img')
                     .css('background-image', 'url(' + (img || nobg) + ')')
                     .addClass('fadein');

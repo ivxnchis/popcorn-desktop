@@ -228,6 +228,11 @@ Common.normalize = (function () {
     };
 })();
 
+// TMDB serves small images by default; full-width backdrops need a larger size
+Common.largeBackdrop = function(img) {
+    return typeof img === 'string' ? img.replace(/(image\.tmdb\.org\/t\/p\/)w\d+\//, '$1w1280/') : img;
+};
+
 Common.loadImage = function(img, proxy = false) {
     return new Promise(function(resolve, reject) {
         let cache = new Image();
