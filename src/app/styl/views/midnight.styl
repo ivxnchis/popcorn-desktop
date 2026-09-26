@@ -722,3 +722,107 @@ glass()
 
     .loading-progressbar
         background-color rgba(255, 255, 255, 0.14)
+
+// ---------- First-run terms screen
+
+#disclaimer-container .disclaimer
+    .loading-backdrop
+        opacity 0.85
+        background-color $BgColor1
+
+    .icon-disclaimer
+        width 200px
+        top 50%
+        margin-top -100px
+        left 7%
+        -webkit-filter drop-shadow(0 18px 40px rgba(0, 0, 0, 0.6))
+        filter drop-shadow(0 18px 40px rgba(0, 0, 0, 0.6))
+
+    .disclaimer-state .disclaimer-content
+        padding-top 10%
+
+        h1
+            font-size 28px
+            font-weight 800
+            letter-spacing -0.01em
+            text-transform none
+
+        .disclaimer-text
+            box-sizing border-box
+            margin 20px 0
+            padding 16px 20px
+            background $Surface
+            border 1px solid $Hairline
+            border-radius 14px
+            color rgba(255, 255, 255, 0.72)
+            font-size 13px
+            line-height 1.5
+            text-transform none
+            text-align left
+
+            h2
+                color #fff
+                font-size 14px
+
+            p
+                line-height 1.5
+
+        .btn-accept,
+        .btn-close
+            padding 10px 26px
+            border none
+            border-radius 999px
+            font-size 15px
+            font-weight 600
+
+        .btn-accept
+            background-color #fff
+            color #0b0c0f
+
+            &:hover
+                background-color rgba(255, 255, 255, 0.88)
+
+        .btn-close
+            background-color rgba(255, 255, 255, 0.12)
+            color #fff
+
+            &:hover
+                background-color rgba(255, 255, 255, 0.2)
+
+    // checkboxes become switches, as in settings
+    label
+        position relative
+        padding-left 44px
+
+        &:before
+            content ''
+            position absolute
+            left 0
+            top 50%
+            margin-top -10px
+            width 34px
+            height 20px
+            padding 0
+            border-radius 10px
+            background-color rgba(255, 255, 255, 0.16)
+            transition background-color 0.2s
+
+        &:after
+            content ''
+            position absolute
+            left 2px
+            top 50%
+            margin -8px 0 0
+            width 16px
+            height 16px
+            border-radius 50%
+            background #fff
+            opacity 1
+            transition transform 0.2s
+
+    input[type=checkbox]:checked + label
+        &:before
+            background-color $Accent
+
+        &:after
+            transform translateX(14px)

@@ -148,10 +148,17 @@ async function main() {
   await cdp.send('Network.enable');
   const saveProblems = () => fs.writeFileSync(path.join(outDir, `console-${phase}.log`), problems.join('\n') + '\n');
 
+  // lay the page out at a fixed size, whatever the runner's screen is
+  await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
+
   if (phase === 'prepare') {
     await step('disclaimer', async () => {
       await waitFor(`!!(document.querySelector('#disclaimer-container .btn-accept') || document.querySelector('.items .item'))`, 60000);
-      await click('#disclaimer-container .btn-accept');
+      if (await cdp.evaluate(`!!document.querySelector('#disclaimer-container .btn-accept')`)) {
+        await sleep(1500);
+        await shot('00-terms');
+        await click('#disclaimer-container .btn-accept');
+      }
     });
     await step('api urls', async () => {
       await waitFor(`!!AdvSettings.get('dhtData')`, 180000);
@@ -163,8 +170,6 @@ async function main() {
     return;
   }
 
-  // lay the page out at a fixed size, whatever the runner's screen is
-  await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
   await sleep(1500);
 
   await step('movies', async () => {
