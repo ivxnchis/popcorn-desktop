@@ -3,7 +3,7 @@
 // --remote-debugging-port=<port> first.
 //
 // The app only reads its API servers at startup, so run this twice:
-//   node dist/mac/screenshots.js <outDir> <port> prepare   (accept terms, point at the sample API, quit)
+//   node dist/mac/screenshots.js <outDir> <port> prepare   (accept terms, set API_URLS as the servers, quit)
 //   node dist/mac/screenshots.js <outDir> <port> capture   (take the screenshots)
 'use strict';
 
@@ -15,7 +15,7 @@ const WebSocket = require('ws');
 const outDir = process.argv[2] || 'screenshots';
 const port = Number(process.argv[3] || 9222);
 const phase = process.argv[4] || 'capture';
-const sampleApi = process.env.SAMPLE_API || 'http://127.0.0.1:8099/';
+const apiUrls = process.env.API_URLS || 'http://127.0.0.1:8099/';
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function getJSON(url) {
@@ -166,10 +166,10 @@ async function main() {
         await click('#disclaimer-container .btn-accept');
       }
     });
-    // use the local sample API (dist/mac/sample-api.js) so screenshots never
-    // depend on the real servers; turning off DHT updates keeps it from being replaced
-    await step('sample api', async () => {
-      await cdp.evaluate(`['customMoviesServer', 'customSeriesServer', 'customAnimeServer'].forEach((k) => AdvSettings.set(k, ${JSON.stringify(sampleApi)})), AdvSettings.set('dhtEnable', false), true`);
+    // CI can't reach the DHT, so set the API servers directly (the real ones, or
+    // dist/mac/sample-api.js); turning off DHT updates keeps them from being replaced
+    await step('api servers', async () => {
+      await cdp.evaluate(`['customMoviesServer', 'customSeriesServer', 'customAnimeServer'].forEach((k) => AdvSettings.set(k, ${JSON.stringify(apiUrls)})), AdvSettings.set('dhtEnable', false), true`);
     });
     saveProblems();
     await cdp.evaluate(`setTimeout(() => nw.App.quit(), 3000), true`).catch(() => {});

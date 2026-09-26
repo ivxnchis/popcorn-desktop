@@ -29,9 +29,21 @@ stop() {
 node dist/mac/sample-api.js 8099 > "$OUT/sample-api.log" 2>&1 &
 API_PID=$!
 
+# prefer the real API servers; use the local sample data if none of them answer
+REAL_API="${SCREENSHOT_API:-https://fusme.link/,https://jfper.link/,https://uxert.link/,https://yrkde.link/}"
+export API_URLS="http://127.0.0.1:8099/"
+for url in ${REAL_API//,/ }; do
+  body="$(curl -sf -m 15 "${url}movies/1?sort=trending&limit=50&showAll=1" 2>/dev/null)"
+  if [ "${body:0:1}" = "[" ]; then
+    API_URLS="$REAL_API"
+    break
+  fi
+done
+echo "Screenshots use API servers: $API_URLS"
+
 status=0
 
-# first launch: accept the terms and switch to the sample API, then quit
+# first launch: accept the terms and set the API servers, then quit
 launch
 node dist/mac/screenshots.js "$OUT" 9222 prepare || status=1
 for _ in $(seq 1 15); do
