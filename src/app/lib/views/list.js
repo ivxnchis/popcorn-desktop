@@ -262,12 +262,13 @@
                 }
             });
 
-            Mousetrap.bind(['ctrl+1', 'ctrl+2', 'ctrl+3', 'ctrl+4', 'ctrl+5'], function (e, combo) {
-                if ((App.PlayerView === undefined || App.PlayerView.isDestroyed) && $('#about-container').children().length <= 0 && $('#player').children().length <= 0 && combo.charAt(5) <= $(filterBarElem).toArray().length && App.currentview !== filterBarElem[combo.charAt(5) - 1]) {
+            Mousetrap.bind(['ctrl+1', 'ctrl+2', 'ctrl+3', 'ctrl+4', 'ctrl+5', 'command+1', 'command+2', 'command+3', 'command+4', 'command+5'], function (e, combo) {
+                var tab = combo.slice(-1);
+                if ((App.PlayerView === undefined || App.PlayerView.isDestroyed) && $('#about-container').children().length <= 0 && $('#player').children().length <= 0 && tab <= $(filterBarElem).toArray().length && App.currentview !== filterBarElem[tab - 1]) {
                     App.vent.trigger('torrentCollection:close');
                     App.vent.trigger('seedbox:close');
                     $('.filter-bar').find('.active').removeClass('active');
-                    App.currentview = filterBarElem[combo.charAt(5) - 1];
+                    App.currentview = filterBarElem[tab - 1];
                     if (App.currentview === 'Watched') {
                         App.vent.trigger('favorites:list', []);
                     } else {
@@ -443,8 +444,10 @@
 
             $('.ghost').remove();
             var listWidth = items.width();
-            var itemWidth = item.width() + (2 * parseInt(item.css('margin')));
-            var itemsPerRow = parseInt(listWidth / itemWidth);
+            // grid layouts space items with column-gap instead of margins
+            var gap = parseInt(items.css('column-gap')) || 0;
+            var itemWidth = item.outerWidth(true) + gap;
+            var itemsPerRow = Math.max(1, parseInt((listWidth + gap) / itemWidth));
             /* in case we .hide() items at some point:
             var visibleItems = 0;
             var hiddenItems = 0;

@@ -31,10 +31,9 @@
             position absolute
             left 15px
 
+        // the green window button already toggles full screen on macOS
         &.fs-darwin
-            top 0px
-            right 7px
-            left initial
+            display none
 
         &.win32,
         &.linux
@@ -145,26 +144,49 @@
                 background-position -120px 0px
                 -webkit-filter brightness(1)
 
+    // macOS window buttons, drawn to match the system ones
     .btn-set.darwin
-        .btn-os
-            background-image none
-            background-repeat no-repeat
-            &.os-close
-                background-color #FC5753
-            &.os-max
-                background-color #33C748
-            &.os-min
-                background-color #FDBC40
+        display flex
+        gap 8px
 
-        &:hover
-            .btn-os
-                background-image url('../images/icons/topbar_sprite.png')
-                &.os-min
-                    background-position -39px 0px
-                &.os-max
-                    background-position -52px 0px
-                &.os-close
-                    background-position -65px 0px
+        .btn-os
+            position relative
+            margin 0
+            width 12px
+            height 12px
+            background-image none
+            box-shadow inset 0 0 0 0.5px rgba(0, 0, 0, 0.18)
+            &.os-close
+                background-color #ff5f57
+            &.os-min
+                background-color #febc2e
+            &.os-max
+                background-color #28c840
+            &::after
+                content ''
+                position absolute
+                inset 0
+                opacity 0
+                background-repeat no-repeat
+                background-position center
+                background-size 12px 12px
+            &.os-close::after
+                background-image url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3.6 3.6l4.8 4.8M8.4 3.6l-4.8 4.8' stroke='%234d0000' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E")
+            &.os-min::after
+                background-image url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3 6h6' stroke='%23995700' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E")
+            &.os-max::after
+                background-image url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M3.5 3.5H7L3.5 7zM8.5 8.5H5L8.5 5z' fill='%23006500'/%3E%3C/svg%3E")
+
+        &:hover .btn-os::after
+            opacity 0.85
+
+        .btn-os:active
+            filter brightness(0.8)
+
+    // inactive windows show gray buttons, like the system
+    .window-blurred & .btn-set.darwin:not(:hover) .btn-os
+        background-color rgba(128, 128, 128, 0.35)
+        box-shadow inset 0 0 0 0.5px rgba(0, 0, 0, 0.12)
 
 .header-shadow
     box-shadow $TopBarShadow

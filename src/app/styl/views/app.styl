@@ -5,9 +5,16 @@ vendor-prefixes = webkit official
 
 global-reset()
 
-$TitleHeight = 32px
-$FilterBarHeight = 35px
-$HeaderHeight = 65px
+// macOS: use the system font (SF Pro) instead of the bundled Open Sans
+$Font = system-ui, -apple-system, 'Open Sans'
+$MainFont = $Font
+$MainFontBold = $Font
+$ButtonFont = $Font
+
+// themes may set these before importing this file
+$TitleHeight ?= 32px
+$FilterBarHeight ?= 35px
+$HeaderHeight ?= 65px
 $MovieListPadding = calc(100% - 67px)
 
 @import 'fonts'

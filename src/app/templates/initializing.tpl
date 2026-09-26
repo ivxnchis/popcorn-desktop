@@ -1,4 +1,4 @@
-<img class="icon-begin" src="/src/app/images/icon.png">
+<img class="icon-begin" src="/src/app/images/icon-macos.png">
 <img class="init-icon-title" src="/src/app/images/popcorn-time-logo.svg">
 <div class="init-geek-line">
     <%= i18n.__("Made with") %> <span class="heart">&#10084;</span> <%= i18n.__("by a bunch of geeks from All Around The World") %>

@@ -121,6 +121,18 @@ if (os.platform() === 'darwin') {
     hideEdit: false,
     hideWindow: true
   });
+  // "Settings…" (⌘,) right under "About", where macOS apps keep it
+  var appMenu = nativeMenuBar.items[0].submenu;
+  appMenu.insert(new nw.MenuItem({ type: 'separator' }), 1);
+  appMenu.insert(new nw.MenuItem({
+    label: 'Settings…',
+    key: ',',
+    modifiers: 'cmd',
+    click: function () {
+      App.vent.trigger('about:close');
+      App.vent.trigger('settings:show');
+    }
+  }), 2);
   win.menu = nativeMenuBar;
 }
 
@@ -275,6 +287,15 @@ win.on('resize', function (width, height) {
 win.on('move', function (x, y) {
   localStorage.posX = Math.round(x);
   localStorage.posY = Math.round(y);
+});
+
+// gray out the macOS window buttons while the window is in the background
+win.on('blur', function () {
+  document.body.classList.add('window-blurred');
+});
+
+win.on('focus', function () {
+  document.body.classList.remove('window-blurred');
 });
 
 win.on('enter-fullscreen', function () {

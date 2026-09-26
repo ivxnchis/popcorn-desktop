@@ -896,7 +896,7 @@
                 that.seek(60);
             });
 
-            Mousetrap.bind('ctrl+right', function (e) {
+            Mousetrap.bind(['ctrl+right', 'command+right'], function (e) {
                 that.seek(600);
             });
 
@@ -908,7 +908,7 @@
                 that.seek(-60);
             });
 
-            Mousetrap.bind('ctrl+left', function (e) {
+            Mousetrap.bind(['ctrl+left', 'command+left'], function (e) {
                 that.seek(-600);
             });
 
@@ -920,7 +920,7 @@
                 that.adjustVolume(0.5);
             });
 
-            Mousetrap.bind('ctrl+up', function (e) {
+            Mousetrap.bind(['ctrl+up', 'command+up'], function (e) {
                 that.adjustVolume(1);
             });
 
@@ -932,7 +932,7 @@
                 that.adjustVolume(-0.5);
             });
 
-            Mousetrap.bind('ctrl+down', function (e) {
+            Mousetrap.bind(['ctrl+down', 'command+down'], function (e) {
                 that.adjustVolume(-1);
             });
 
@@ -1069,25 +1069,25 @@
 
             Mousetrap.unbind('shift+right');
 
-            Mousetrap.unbind('ctrl+right');
+            Mousetrap.unbind(['ctrl+right', 'command+right']);
 
             Mousetrap.unbind('left');
 
             Mousetrap.unbind('shift+left');
 
-            Mousetrap.unbind('ctrl+left');
+            Mousetrap.unbind(['ctrl+left', 'command+left']);
 
             Mousetrap.unbind('up');
 
             Mousetrap.unbind('shift+up');
 
-            Mousetrap.unbind('ctrl+up');
+            Mousetrap.unbind(['ctrl+up', 'command+up']);
 
             Mousetrap.unbind('down');
 
             Mousetrap.unbind('shift+down');
 
-            Mousetrap.unbind('ctrl+down');
+            Mousetrap.unbind(['ctrl+down', 'command+down']);
 
             Mousetrap.unbind(['m', 'M']);
 

@@ -88,7 +88,7 @@ Settings.trackers = {
 };
 
 // User Interface
-Settings.theme = 'Official_-_Dark_theme';
+Settings.theme = 'Popcorn_-_Midnight_theme';
 Settings.startScreen = 'Movies';
 Settings.lastTab = '';
 Settings.moviesTabEnable = true;

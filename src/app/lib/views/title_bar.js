@@ -52,7 +52,12 @@
             }
         },
 
-        maximize: function () {
+        maximize: function (e) {
+            // on macOS the green button enters full screen; option-click zooms
+            if (process.platform === 'darwin' && !(e && e.altKey)) {
+                this.toggleFullscreen();
+                return;
+            }
             if (this.nativeWindow.isFullscreen) {
                 this.nativeWindow.toggleFullscreen();
             } else {
