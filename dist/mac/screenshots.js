@@ -2,7 +2,10 @@
 // screenshots of the main screens. Start the app with
 // --remote-debugging-port=<port> first.
 //
-// Usage: node dist/mac/screenshots.js <outDir> [port]
+// A fresh install has no API server URLs yet: it fetches them over the DHT
+// and needs a restart. So run this twice:
+//   node dist/mac/screenshots.js <outDir> <port> prepare   (accept terms, fetch URLs, quit)
+//   node dist/mac/screenshots.js <outDir> <port> capture   (take the screenshots)
 'use strict';
 
 const fs = require('fs');
@@ -12,6 +15,7 @@ const WebSocket = require('ws');
 
 const outDir = process.argv[2] || 'screenshots';
 const port = Number(process.argv[3] || 9222);
+const phase = process.argv[4] || 'capture';
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 function getJSON(url) {
@@ -121,17 +125,47 @@ async function main() {
   };
   const itemsLoaded = `document.querySelectorAll('.items .item').length >= 6`;
 
-  await cdp.evaluate(`nw.Window.get().resizeTo(1280, 800), true`);
-  await sleep(1500);
-  console.log('Viewport:', await cdp.evaluate(`JSON.stringify({ w: innerWidth, h: innerHeight, dpr: devicePixelRatio, screen: [screen.width, screen.height] })`));
-
-  await step('disclaimer', async () => {
-    await waitFor(`!!(document.querySelector('#disclaimer-container .btn-accept') || document.querySelector('.items .item'))`, 60000);
-    if (await click('#disclaimer-container .btn-accept') === false) {
-      return;
+  // keep console errors and failed requests for debugging
+  const problems = [];
+  const requests = {};
+  cdp.ws.on('message', (data) => {
+    const msg = JSON.parse(data);
+    if (msg.method === 'Runtime.exceptionThrown') {
+      problems.push('exception: ' + msg.params.exceptionDetails.text + ' ' + JSON.stringify(msg.params.exceptionDetails.exception && msg.params.exceptionDetails.exception.description));
+    } else if (msg.method === 'Runtime.consoleAPICalled' && ['error', 'warning'].includes(msg.params.type)) {
+      problems.push(msg.params.type + ': ' + msg.params.args.map((a) => a.value || a.description).join(' '));
+    } else if (msg.method === 'Network.loadingFailed') {
+      problems.push('request failed: ' + msg.params.errorText + ' ' + (requests[msg.params.requestId] || ''));
     }
-    await sleep(500);
   });
+  cdp.ws.on('message', (data) => {
+    const msg = JSON.parse(data);
+    if (msg.method === 'Network.requestWillBeSent') {
+      requests[msg.params.requestId] = msg.params.request.url;
+    }
+  });
+  await cdp.send('Runtime.enable');
+  await cdp.send('Network.enable');
+  const saveProblems = () => fs.writeFileSync(path.join(outDir, `console-${phase}.log`), problems.join('\n') + '\n');
+
+  if (phase === 'prepare') {
+    await step('disclaimer', async () => {
+      await waitFor(`!!(document.querySelector('#disclaimer-container .btn-accept') || document.querySelector('.items .item'))`, 60000);
+      await click('#disclaimer-container .btn-accept');
+    });
+    await step('api urls', async () => {
+      await waitFor(`!!AdvSettings.get('dhtData')`, 180000);
+      console.log('Got the API server URLs');
+    });
+    saveProblems();
+    await cdp.evaluate(`setTimeout(() => nw.App.quit(), 3000), true`).catch(() => {});
+    cdp.ws.close();
+    return;
+  }
+
+  // lay the page out at a fixed size, whatever the runner's screen is
+  await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
+  await sleep(1500);
 
   await step('movies', async () => {
     await waitFor(itemsLoaded, 60000);
@@ -178,6 +212,7 @@ async function main() {
     await sleep(500);
   });
 
+  saveProblems();
   cdp.ws.close();
 }
 
