@@ -444,8 +444,10 @@
 
             $('.ghost').remove();
             var listWidth = items.width();
-            var itemWidth = item.width() + (2 * parseInt(item.css('margin')));
-            var itemsPerRow = parseInt(listWidth / itemWidth);
+            // grid layouts space items with column-gap instead of margins
+            var gap = parseInt(items.css('column-gap')) || 0;
+            var itemWidth = item.outerWidth(true) + gap;
+            var itemsPerRow = Math.max(1, parseInt((listWidth + gap) / itemWidth));
             /* in case we .hide() items at some point:
             var visibleItems = 0;
             var hiddenItems = 0;

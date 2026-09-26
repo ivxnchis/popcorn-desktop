@@ -268,8 +268,8 @@
         try {
           fs.statSync('src/app/themes/' + Settings.theme + '.css');
         } catch (e) {
-          Settings.theme = 'Official_-_Dark_theme';
-          AdvSettings.set('theme', 'Official_-_Dark_theme');
+          Settings.theme = 'Popcorn_-_Midnight_theme';
+          AdvSettings.set('theme', 'Popcorn_-_Midnight_theme');
         }
 
         $('link#theme').attr('href', 'themes/' + Settings.theme + '.css');
@@ -633,6 +633,10 @@
             Settings.postersMinFontSize;
 
           var stylesheetContents = [
+            ':root {',
+            '--poster-width: ', postersWidth, 'px;',
+            '}',
+
             '.list .items .item {',
             'width:',
             postersWidth,
