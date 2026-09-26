@@ -49,12 +49,13 @@ glass()
     opacity 1
     -webkit-app-region drag
 
-    ul,
-    li,
+    // only the controls opt out, so the rest of the bar drags the window
+    .source,
     a,
     i,
     input,
-    form
+    form,
+    .dropdown-menu
         -webkit-app-region no-drag
 
     .nav
