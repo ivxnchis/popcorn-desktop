@@ -1,11 +1,8 @@
 name: Latest Build
 
 on:
-  push:
-    branches:
-      - '*'
-    tags:
-      - 'v*'
+  # This fork only ships macOS (see macos.yml); run manually for other platforms.
+  workflow_dispatch:
 
 jobs:
   build:
