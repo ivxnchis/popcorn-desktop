@@ -84,6 +84,12 @@ function connect(url) {
 }
 
 async function main() {
+  // never hold up the build for long
+  setTimeout(() => {
+    console.error(`Gave up after 6 minutes (${phase})`);
+    process.exit(1);
+  }, 6 * 60 * 1000).unref();
+
   fs.mkdirSync(outDir, { recursive: true });
   const page = await findPage();
   console.log('Connected to', page.url);
