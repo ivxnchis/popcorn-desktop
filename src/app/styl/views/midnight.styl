@@ -112,6 +112,7 @@ glass()
             background-color rgba(255, 255, 255, 0.08) !important
             color rgba(255, 255, 255, 0.7)
             font-size 13px
+            text-decoration none
             transition background-color 0.2s, color 0.2s
 
             &:hover
@@ -225,6 +226,21 @@ glass()
 
     &::-webkit-scrollbar-track
         margin-top $FilterBarHeight
+
+// "load more" / "search more" tiles and row fillers sit in the grid too
+.list .items
+    .load-more,
+    .search-more
+        width auto
+        height auto
+        aspect-ratio 2 / 3
+        margin 0
+        border-radius $PosterRadius
+        background-color $Surface
+
+    .ghost
+        width auto
+        margin 0
 
 // the poster size setting sets fixed sizes; here it only sets the column width
 .list .items .item.item
