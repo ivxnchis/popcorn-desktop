@@ -167,8 +167,14 @@ async function main() {
       }
     });
     await step('api urls', async () => {
-      await waitFor(`!!AdvSettings.get('dhtData')`, 180000);
-      console.log('Got the API server URLs');
+      try {
+        await waitFor(`!!AdvSettings.get('dhtData')`, 90000);
+        console.log('Got the API server URLs');
+      } catch (e) {
+        // the DHT is often unreachable from CI; YTS still gives the movie tab real data
+        await cdp.evaluate(`AdvSettings.set('customMoviesServer', 'https://yts.mx/'), true`);
+        console.log('No API server URLs over the DHT, using YTS for movies');
+      }
     });
     saveProblems();
     await cdp.evaluate(`setTimeout(() => nw.App.quit(), 3000), true`).catch(() => {});
